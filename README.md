@@ -48,63 +48,83 @@ Timber combines these efforts, delivering polished mechanics with potential for 
    ```bash
    git clone https://github.com/WillCybertron/Timber.git
    cd Timber
-Install dependencies (macOS):
-bash
+# Timber Game
+
+## Installation
+
+### Install dependencies (macOS)
+```bash
 brew install sfml cmake ninja
-Configure and build (CMake):
-bash
+```
+
+### Configure and build (CMake)
+```bash
 mkdir build
 cd build
 cmake -G Ninja -DCMAKE_PREFIX_PATH=/opt/homebrew ..
 ninja
-Run the game:
-bash
+```
+
+### Run the game
+```bash
 ./timber
-In VS Code:
-Open the Timber folder.
-Run CMake: Configure and CMake: Build (Command Palette: Cmd+Shift+P).
-Press F5 to debug.
-Note: For runtime errors (dyld: Library not loaded):
-bash
+```
+
+## Development Setup
+
+### VS Code
+1. Open the Timber folder
+2. Run CMake: Configure and CMake: Build (Command Palette: `Cmd+Shift+P`)
+3. Press `F5` to debug
+
+### Troubleshooting
+For runtime errors (`dyld: Library not loaded`):
+```bash
 export DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH
+```
+
 Or:
-bash
+```bash
 install_name_tool -add_rpath /opt/homebrew/lib timber
-Project Structure
-plaintext
+```
+
+## Project Structure
+```
 Timber/
-├── main.cpp              # Game logic
-├── .vscode/              # VS Code settings
+├── main.cpp                    # Game logic
+├── .vscode/                    # VS Code settings
 │   ├── tasks.json
 │   ├── c_cpp_properties.json
 │   ├── launch.json
-│   ├── settings.json
-├── CMakeLists.txt        # CMake configuration
-├── assets/               # Game assets (planned)
-├── build/                # Build artifacts
-├── .gitignore            # Excludes build files
-├── README.md             # Documentation
-Roadmap
-Timer-based gameplay (2-second limit).
-Chopping mechanic (Space key).
-Branch spawning and collision detection.
-Sprites and audio integration.
-AI-driven features (e.g., dynamic difficulty).
-Contributing
-Fork the repository.
-Create a branch: git checkout -b feature/<name>.
-Commit changes: git commit -m "Add <feature>".
-Push: git push origin feature/<name>.
-Open a pull request.
-Use Clang-Format (brew install clang-format) for code style consistency.
-License
-MIT License. See LICENSE.
-Contact
-One Frequency, Inc.: info@onefrequency.com
+│   └── settings.json
+├── CMakeLists.txt              # CMake configuration
+├── assets/                     # Game assets (planned)
+├── build/                      # Build artifacts
+├── .gitignore                  # Excludes build files
+└── README.md                   # Documentation
+```
+
+## Roadmap
+- Timer-based gameplay (2-second limit)
+- Chopping mechanic (Space key)
+- Branch spawning and collision detection
+- Sprites and audio integration
+- AI-driven features (e.g., dynamic difficulty)
+
+## Contributing
+1. Fork the repository
+2. Create a branch: `git checkout -b feature/<feature-name>`
+3. Commit changes: `git commit -m "Add <feature>"`
+4. Push: `git push origin feature/<feature-name>`
+5. Open a pull request
+
+Use Clang-Format (`brew install clang-format`) for code style consistency.
+
+## License
+MIT License. See [LICENSE](LICENSE).
+
+## Contact
+**One Frequency, Inc.**
+Email: info@onefrequency.com
+
 Developed by One Frequency Games and One Frequency AI, under One Frequency, Inc.
-
----
-
-
----
-
