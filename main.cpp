@@ -58,6 +58,8 @@ int main() {
 
   Clock clock;
 
+  bool paused{true};
+
   // Seed random number generator once
   srand(static_cast<unsigned>(time(0)));
 
@@ -66,6 +68,9 @@ int main() {
       if (event->is<Event::Closed>()) {
         window.close();
       }
+      if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
+        paused = false;
+      }
 
       if (const auto* keyPressed = event->getIf<Event::KeyPressed>()) {
         if (keyPressed->code == Keyboard::Key::Escape) {
@@ -73,45 +78,46 @@ int main() {
         }
       }
     }
+    if (!paused) {
+      Time dt = clock.restart();
 
-    Time dt = clock.restart();
-
-    if (!beeActive) {
-      // How fast the bee moves
-      beeSpeed = (rand() % 200) + 200;
-      // How high the bee flies
-      float height = static_cast<float>(rand() % 500) + 500;
-      spriteBee.setPosition({2000, height});
-      beeActive = true;
-    } else {
-      // Move the bee
-      spriteBee.setPosition(
-          {spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
-           spriteBee.getPosition().y});
-
-      if (spriteBee.getPosition().x < -100) {
-        beeActive = false;
-      }
-    }
-
-    // Update clouds
-    for (int i = 0; i < 3; i++) {
-      if (!cloudActive[i]) {
-        // How fast is the cloud
-        cloudSpeed[i] = (rand() % 200);
-        // How high is the cloud
-        float height = (rand() % (heightRanges[i][1] - heightRanges[i][0])) +
-                       heightRanges[i][0];
-        spriteClouds[i].setPosition({-200, height});
-        cloudActive[i] = true;
+      if (!beeActive) {
+        // How fast the bee moves
+        beeSpeed = (rand() % 200) + 200;
+        // How high the bee flies
+        float height = static_cast<float>(rand() % 500) + 500;
+        spriteBee.setPosition({2000, height});
+        beeActive = true;
       } else {
-        spriteClouds[i].setPosition(
-            {spriteClouds[i].getPosition().x + (cloudSpeed[i] * dt.asSeconds()),
-             spriteClouds[i].getPosition().y});
-        // Has the cloud reached the right hand edge of the screen?
-        if (spriteClouds[i].getPosition().x > 1920) {
-          // Set it up ready to be a whole new cloud next frame
-          cloudActive[i] = false;
+        // Move the bee
+        spriteBee.setPosition(
+            {spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
+             spriteBee.getPosition().y});
+
+        if (spriteBee.getPosition().x < -100) {
+          beeActive = false;
+        }
+      }
+
+      // Update clouds
+      for (int i = 0; i < 3; i++) {
+        if (!cloudActive[i]) {
+          // How fast is the cloud
+          cloudSpeed[i] = (rand() % 200);
+          // How high is the cloud
+          float height = (rand() % (heightRanges[i][1] - heightRanges[i][0])) +
+                         heightRanges[i][0];
+          spriteClouds[i].setPosition({-200, height});
+          cloudActive[i] = true;
+        } else {
+          spriteClouds[i].setPosition({spriteClouds[i].getPosition().x +
+                                           (cloudSpeed[i] * dt.asSeconds()),
+                                       spriteClouds[i].getPosition().y});
+          // Has the cloud reached the right hand edge of the screen?
+          if (spriteClouds[i].getPosition().x > 1920) {
+            // Set it up ready to be a whole new cloud next frame
+            cloudActive[i] = false;
+          }
         }
       }
     }
