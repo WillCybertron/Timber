@@ -12,6 +12,12 @@ int main() {
   Sprite spriteBackground(textureBackground);
   spriteBackground.setPosition({0, 0});
 
+  Texture textureTree;
+  textureTree.loadFromFile("../graphics/tree.png");
+
+  Sprite spriteTree(textureTree);
+  spriteTree.setPosition({810, 0});
+
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
       if (event->is<Event::Closed>()) window.close();
@@ -23,6 +29,7 @@ int main() {
 
     window.clear();
     window.draw(spriteBackground);
+    window.draw(spriteTree);
     window.display();
   }
 
