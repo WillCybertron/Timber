@@ -44,21 +44,17 @@ int main() {
     return 1;
   }
 
-  Sprite spriteCloud1(textureCloud);
-  Sprite spriteCloud2(textureCloud);
-  Sprite spriteCloud3(textureCloud);
+  Sprite spriteClouds[3] = {Sprite(textureCloud), Sprite(textureCloud),
+                            Sprite(textureCloud)};
+  spriteClouds[0].setPosition({0, 0});
+  spriteClouds[1].setPosition({200, 250});
+  spriteClouds[2].setPosition({0, 500});
 
-  spriteCloud1.setPosition({0, 0});
-  spriteCloud2.setPosition({200, 250});
-  spriteCloud3.setPosition({0, 500});
+  bool cloudActive[3] = {false, false, false};
+  float cloudSpeed[3] = {0.0f, 0.0f, 0.0f};
 
-  bool cloud1Active{false};
-  bool cloud2Active{false};
-  bool cloud3Active{false};
-
-  float cloud1Speed{0.0f};
-  float cloud2Speed{0.0f};
-  float cloud3Speed{0.0f};
+  // Different height ranges for each cloud
+  int heightRanges[3][2] = {{0, 150}, {-150, 150}, {-150, 300}};
 
   Clock clock;
 
@@ -98,11 +94,33 @@ int main() {
       }
     }
 
+    // Update clouds
+    for (int i = 0; i < 3; i++) {
+      if (!cloudActive[i]) {
+        // How fast is the cloud
+        cloudSpeed[i] = (rand() % 200);
+        // How high is the cloud
+        float height = (rand() % (heightRanges[i][1] - heightRanges[i][0])) +
+                       heightRanges[i][0];
+        spriteClouds[i].setPosition({-200, height});
+        cloudActive[i] = true;
+      } else {
+        spriteClouds[i].setPosition(
+            {spriteClouds[i].getPosition().x + (cloudSpeed[i] * dt.asSeconds()),
+             spriteClouds[i].getPosition().y});
+        // Has the cloud reached the right hand edge of the screen?
+        if (spriteClouds[i].getPosition().x > 1920) {
+          // Set it up ready to be a whole new cloud next frame
+          cloudActive[i] = false;
+        }
+      }
+    }
+
     window.clear();
     window.draw(spriteBackground);
-    window.draw(spriteCloud1);
-    window.draw(spriteCloud2);
-    window.draw(spriteCloud3);
+    window.draw(spriteClouds[0]);
+    window.draw(spriteClouds[1]);
+    window.draw(spriteClouds[2]);
     window.draw(spriteTree);
     window.draw(spriteBee);
     window.display();
