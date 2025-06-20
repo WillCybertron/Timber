@@ -1,23 +1,23 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Timber",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/timber",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
         {
-            "name": "Debug Timber",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/timber",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [
-                {
-                    "name": "DYLD_LIBRARY_PATH",
-                    "value": "/opt/homebrew/lib"
-                }
-            ],
-            "externalConsole": false,
-            "MIMode": "lldb",
-            "preLaunchTask": "CMake: Build"
+          "name": "DYLD_LIBRARY_PATH",
+          "value": "/opt/homebrew/lib"
         }
-    ]
+      ],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "build" // Use generic 'build' task
+    }
+  ]
 }
