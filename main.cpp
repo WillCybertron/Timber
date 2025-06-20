@@ -6,6 +6,12 @@ int main() {
   RenderWindow window;
   window.create(VideoMode({800u, 600u}), "Timber!!!", State::Fullscreen);
 
+  Texture textureBackground;
+  textureBackground.loadFromFile("../graphics/background.png");
+
+  Sprite spriteBackground(textureBackground);
+  spriteBackground.setPosition({0, 0});
+
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
       if (event->is<Event::Closed>()) window.close();
@@ -16,6 +22,7 @@ int main() {
     }
 
     window.clear();
+    window.draw(spriteBackground);
     window.display();
   }
 
