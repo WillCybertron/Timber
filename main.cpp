@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 using namespace sf;
@@ -31,7 +33,6 @@ int main() {
   }
 
   Sprite spriteBee(textureBee);
-  spriteBee.setTexture(textureBee);
   spriteBee.setPosition({0, 800});
 
   bool beeActive{false};
@@ -47,10 +48,6 @@ int main() {
   Sprite spriteCloud2(textureCloud);
   Sprite spriteCloud3(textureCloud);
 
-  spriteCloud1.setTexture(textureCloud);
-  spriteCloud2.setTexture(textureCloud);
-  spriteCloud3.setTexture(textureCloud);
-
   spriteCloud1.setPosition({0, 0});
   spriteCloud2.setPosition({200, 250});
   spriteCloud3.setPosition({0, 500});
@@ -63,12 +60,41 @@ int main() {
   float cloud2Speed{0.0f};
   float cloud3Speed{0.0f};
 
+  Clock clock;
+
+  // Seed random number generator once
+  srand(static_cast<unsigned>(time(0)));
+
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
-      if (event->is<Event::Closed>()) window.close();
+      if (event->is<Event::Closed>()) {
+        window.close();
+      }
 
       if (const auto* keyPressed = event->getIf<Event::KeyPressed>()) {
-        if (keyPressed->code == Keyboard::Key::Escape) window.close();
+        if (keyPressed->code == Keyboard::Key::Escape) {
+          window.close();
+        }
+      }
+    }
+
+    Time dt = clock.restart();
+
+    if (!beeActive) {
+      // How fast the bee moves
+      beeSpeed = (rand() % 200) + 200;
+      // How high the bee flies
+      float height = static_cast<float>(rand() % 500) + 500;
+      spriteBee.setPosition({2000, height});
+      beeActive = true;
+    } else {
+      // Move the bee
+      spriteBee.setPosition(
+          {spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
+           spriteBee.getPosition().y});
+
+      if (spriteBee.getPosition().x < -100) {
+        beeActive = false;
       }
     }
 
