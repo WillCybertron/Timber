@@ -1,3 +1,22 @@
+# Build artifacts
 build/
 *.o
 timber
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+Makefile
+*.ninja
+compile_commands.json
+
+# IDE and editor files
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Other temporary files
+*.log
+*.tmp

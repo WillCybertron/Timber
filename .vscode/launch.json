@@ -5,7 +5,7 @@
             "name": "Debug Timber",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/timber",
+            "program": "${workspaceFolder}/build/timber",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -17,7 +17,7 @@
             ],
             "externalConsole": false,
             "MIMode": "lldb",
-            "preLaunchTask": "Build Timber"
+            "preLaunchTask": "CMake: Build"
         }
     ]
 }
