@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
   RenderWindow window;
-  window.create(VideoMode({800u, 600u}), "Timber!!!", State::Fullscreen);
+  window.create(VideoMode({1920u, 1080u}), "Timber!!!", State::Fullscreen);
 
   Texture textureBackground;
   if (!textureBackground.loadFromFile("../graphics/background.png")) {
@@ -60,6 +60,19 @@ int main() {
 
   Clock clock;
 
+  // Time Bar
+  RectangleShape timeBar;
+  float timeBarStartWidth{400.0f};
+  float timeBarHeight{125.0f};
+  timeBar.setSize(Vector2(timeBarStartWidth, timeBarHeight));
+  timeBar.setFillColor(Color::Red);
+  timeBar.setPosition(
+      {1920 / 2.0f - timeBarStartWidth / 2.0f, 1080 - timeBarHeight - 20});
+  Time gameTimeTotal;
+  float timeRemaining{6.0f};
+  float timeBarWidthPerSecond{timeBarStartWidth /
+                              timeRemaining};  // 6 seconds for the game
+
   bool paused{true};
 
   int score{0};
@@ -99,6 +112,10 @@ int main() {
       }
       if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
         paused = false;
+
+        // Reset the game state
+        score = 0;
+        timeRemaining = 6.0f;
       }
 
       if (const auto* keyPressed = event->getIf<Event::KeyPressed>()) {
@@ -109,6 +126,20 @@ int main() {
     }
     if (!paused) {
       Time dt = clock.restart();
+
+      // Subtract from the time remaining
+      timeRemaining -= dt.asSeconds();
+      timeBar.setSize({timeBarWidthPerSecond * timeRemaining, timeBarHeight});
+      if (timeRemaining <= 0.0f) {
+        // Pause the game
+        paused = true;
+        messageText.setString("Out of time!");
+        FloatRect textRect = messageText.getLocalBounds();
+        messageText.setOrigin({textRect.position.x + textRect.size.x / 2.0f,
+                               textRect.position.y + textRect.size.y / 2.0f});
+
+        messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+      }
 
       if (!beeActive) {
         // How fast the bee moves
@@ -163,6 +194,7 @@ int main() {
     window.draw(spriteTree);
     window.draw(spriteBee);
     window.draw(scoreText);
+    window.draw(timeBar);
     if (paused) {
       window.draw(messageText);
     }
