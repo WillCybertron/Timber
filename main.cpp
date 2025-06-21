@@ -2,8 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <sstream>
 
 using namespace sf;
+using namespace std;
 
 int main() {
   RenderWindow window;
@@ -59,6 +61,33 @@ int main() {
   Clock clock;
 
   bool paused{true};
+
+  int score{0};
+  Font font;
+  if (!font.openFromFile("../fonts/KOMIKAP_.ttf")) {
+    std::cerr << "Error loading font" << std::endl;
+    return 1;  // or handle the error appropriately
+  }
+
+  Text messageText{font};
+  Text scoreText{font};
+
+  messageText.setFont(font);
+  scoreText.setFont(font);
+
+  messageText.setString("Press Enter to start!");
+  scoreText.setString("Score = 0");
+  messageText.setCharacterSize(75);
+  scoreText.setCharacterSize(100);
+  messageText.setFillColor(Color::White);
+  scoreText.setFillColor(Color::White);
+
+  // Position the text
+  FloatRect textRect = messageText.getLocalBounds();
+  messageText.setOrigin({textRect.position.x + textRect.size.x / 2.0f,
+                         textRect.position.y + textRect.size.y / 2.0f});
+  messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+  scoreText.setPosition({20, 20});
 
   // Seed random number generator once
   srand(static_cast<unsigned>(time(0)));
@@ -120,6 +149,10 @@ int main() {
           }
         }
       }
+
+      stringstream ss;
+      ss << "Score = " << score;
+      scoreText.setString(ss.str());
     }
 
     window.clear();
@@ -129,6 +162,11 @@ int main() {
     window.draw(spriteClouds[2]);
     window.draw(spriteTree);
     window.draw(spriteBee);
+    window.draw(scoreText);
+    if (paused) {
+      window.draw(messageText);
+    }
+
     window.display();
   }
 
