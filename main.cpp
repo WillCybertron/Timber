@@ -343,6 +343,43 @@ int main() {
               {3000.f, height});  // Use -> and {} for position
         }
       }
+      if (logActive) {
+        spriteLog.setPosition(
+            {spriteLog.getPosition().x + (logSpeedX * dt.asSeconds()),
+             spriteLog.getPosition().y + (logSpeedY * dt.asSeconds())});
+
+        // Has the log reached the right hand edge?
+        if (spriteLog.getPosition().x < -100 ||
+            spriteLog.getPosition().x > 2000) {
+          // Set it up ready to be a whole new log next frame
+          logActive = false;
+          spriteLog.setPosition({810, 720});  // Fixed: use {} instead of comma
+        }
+      }
+      if (branchPositions[5] == playerSide) {
+        // death
+        paused = true;
+        acceptInput = false;
+
+        // Draw the gravestone
+        spriteRIP.setPosition({525, 760});  // Fixed: use {}
+
+        // hide the player
+        spritePlayer.setPosition({2000, 660});  // Fixed: use {}
+
+        // Change the text of the message
+        messageText.setString("SQUISHED!!");
+
+        // Center it on the screen
+        FloatRect textRect = messageText.getLocalBounds();
+        messageText.setOrigin(
+            {textRect.position.x + textRect.size.x / 2.0f,
+             textRect.position.y +
+                 textRect.size.y /
+                     2.0f});  // Fixed: use {} and new SFML 3.0 properties
+
+        messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});  // Fixed: use {}
+      }
     }
 
     window.clear();
