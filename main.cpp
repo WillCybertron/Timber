@@ -7,6 +7,17 @@
 using namespace sf;
 using namespace std;
 
+// Function declartions
+void updateBranches(int seed);
+const int NUM_BRANCHES{6};
+std::unique_ptr<Sprite> branches[NUM_BRANCHES];
+
+// Where is the player/branch?
+//  Left or Right?
+
+enum class side { Left, Right, None };
+side branchPositions[NUM_BRANCHES];
+
 int main() {
   RenderWindow window;
   window.create(VideoMode({1920u, 1080u}), "Timber!!!", State::Fullscreen);
@@ -105,6 +116,22 @@ int main() {
   // Seed random number generator once
   srand(static_cast<unsigned>(time(0)));
 
+  // Prepare 5 branches
+  Texture textureBranch;
+  if (!textureBranch.loadFromFile("../graphics/branch.png")) {
+    std::cerr << "Failed to load branch.png\n";
+    return 1;
+  }
+  // Set the texture for each branch sprite
+  for (int i = 0; i < NUM_BRANCHES; i++) {
+    branches[i] = std::make_unique<Sprite>(textureBranch);
+    branches[i]->setPosition({-2000, -2000});  // Start off-screen
+    // Set the sprite's origin to the center
+    // We can then spin it around without changing its position
+    branches[i]->setOrigin({220, 20});
+  }
+
+  // Main game loop
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
       if (event->is<Event::Closed>()) {
@@ -184,6 +211,31 @@ int main() {
       stringstream ss;
       ss << "Score = " << score;
       scoreText.setString(ss.str());
+
+      for (int i = 0; i < NUM_BRANCHES; i++) {
+        float height = static_cast<float>(i * 150);
+        if (branchPositions[i] == side::Left)  // Note: "Left" not "LEFT"
+        {
+          // Move the sprite to the left side
+          branches[i]->setPosition(
+              {610.f, height});  // Use -> and {} for position
+          // Flip the sprite round the other way
+          branches[i]->setRotation(
+              sf::radians(180.f));  // SFML 3.0 uses radians
+        } else if (branchPositions[i] ==
+                   side::Right)  // Note: "Right" not "RIGHT"
+        {
+          // Move the sprite to the right side
+          branches[i]->setPosition(
+              {1330.f, height});  // Use -> and {} for position
+          // Set the sprite rotation to normal
+          branches[i]->setRotation(sf::radians(0.f));  // SFML 3.0 uses radians
+        } else {
+          // Hide the branch
+          branches[i]->setPosition(
+              {3000.f, height});  // Use -> and {} for position
+        }
+      }
     }
 
     window.clear();
@@ -191,6 +243,9 @@ int main() {
     window.draw(spriteClouds[0]);
     window.draw(spriteClouds[1]);
     window.draw(spriteClouds[2]);
+    for (int i = 0; i < NUM_BRANCHES; i++) {
+      window.draw(*branches[i]);
+    }
     window.draw(spriteTree);
     window.draw(spriteBee);
     window.draw(scoreText);
@@ -203,4 +258,24 @@ int main() {
   }
 
   return 0;
+}
+
+void updateBranches(int seed) {
+  // Move all branches down one place
+  for (int j = NUM_BRANCHES - 1; j > 0; j--) {
+    branchPositions[j] = branchPositions[j - 1];
+  }
+  srand((int)time(0) + seed);
+  int r = (rand() % 5);
+  switch (r) {
+    case 0:
+      branchPositions[0] = side::Left;
+      break;
+    case 1:
+      branchPositions[0] = side::Right;
+      break;
+    default:
+      branchPositions[0] = side::None;
+      break;
+  }
 }
