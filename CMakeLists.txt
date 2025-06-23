@@ -11,4 +11,4 @@ link_directories(/opt/homebrew/lib)
 
 add_executable(timber main.cpp)
 
-target_link_libraries(timber PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(timber PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)

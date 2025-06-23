@@ -1,3 +1,4 @@
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <ctime>
@@ -179,6 +180,27 @@ int main() {
 
   // Control the player input
   bool acceptInput = false;
+  SoundBuffer chopBuffer;
+  if (!chopBuffer.loadFromFile("../sound/chop.wav")) {
+    std::cerr << "Error: Could not load chop.wav" << std::endl;
+    // Handle error - maybe use a default sound or exit gracefully
+  }
+  Sound chop(chopBuffer);
+
+  SoundBuffer deathBuffer;
+  if (!deathBuffer.loadFromFile("../sound/death.wav")) {
+    std::cerr << "Error: Could not load death.wav" << std::endl;
+    // Handle error - maybe use a default sound or exit gracefully
+  }
+  Sound deathSound(deathBuffer);
+
+  // Out of time
+  SoundBuffer ootBuffer;
+  if (!ootBuffer.loadFromFile("../sound/out_of_time.wav")) {
+    std::cerr << "Error: Could not load out_of_time.wav" << std::endl;
+    // Handle error - maybe use a default sound or exit gracefully
+  }
+  Sound outOfTime(ootBuffer);
 
   // Main game loop
   while (window.isOpen()) {
@@ -222,15 +244,17 @@ int main() {
           timeRemaining += (2 / score) + .15;
           spriteAxe.setPosition(
               {AXE_POSITION_RIGHT, spriteAxe.getPosition().y});
-          spritePlayer.setPosition({1200, 720});
+          spritePlayer.setPosition({1120, 660});
           // Update the branches
           updateBranches(score);
 
           // Set the log flying to the left
-          spriteLog.setPosition({810, 720});
+          spriteLog.setPosition({800, 600});
           logSpeedX = -5000;
           logActive = true;
           acceptInput = false;
+
+          chop.play();
         }
       }
 
@@ -250,6 +274,8 @@ int main() {
         logSpeedX = 5000;
         logActive = true;
         acceptInput = false;
+
+        chop.play();
       }
 
       if (const auto* keyPressed = event->getIf<Event::KeyPressed>()) {
@@ -273,6 +299,8 @@ int main() {
                                textRect.position.y + textRect.size.y / 2.0f});
 
         messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+
+        outOfTime.play();
       }
 
       if (!beeActive) {
@@ -378,7 +406,9 @@ int main() {
                  textRect.size.y /
                      2.0f});  // Fixed: use {} and new SFML 3.0 properties
 
-        messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});  // Fixed: use {}
+        messageText.setPosition({1920 / 2.0f, 1080 / 2.0f});
+
+        deathSound.play();
       }
     }
 
