@@ -177,18 +177,79 @@ int main() {
   float logSpeedX = 1000;
   float logSpeedY = -1500;
 
+  // Control the player input
+  bool acceptInput = false;
+
   // Main game loop
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
       if (event->is<Event::Closed>()) {
         window.close();
       }
+      // Handle Player Input
+      if (const auto* keyReleased = event->getIf<Event::KeyReleased>()) {
+        if (!paused) {
+          acceptInput = true;
+          spriteAxe.setPosition({2000, spriteAxe.getPosition().y});
+        }
+      }
+
       if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
         paused = false;
 
         // Reset the game state
         score = 0;
         timeRemaining = 6.0f;
+
+        for (int i = 1; i < NUM_BRANCHES; i++) {
+          branchPositions[i] = side::None;
+        }
+        // Make sure the gravestone is hidden
+        spriteRIP.setPosition({675, 2000});
+        // Move the player into position
+        spritePlayer.setPosition({580, 720});
+        acceptInput = true;
+      }
+
+      // Handle Right Arrow
+      if (acceptInput) {
+        if (Keyboard::isKeyPressed(Keyboard::Key::Right)) {
+          // Make sure the player is on the right
+          playerSide = side::Right;
+
+          score++;
+          // Add to the amount of time remaining
+          timeRemaining += (2 / score) + .15;
+          spriteAxe.setPosition(
+              {AXE_POSITION_RIGHT, spriteAxe.getPosition().y});
+          spritePlayer.setPosition({1200, 720});
+          // Update the branches
+          updateBranches(score);
+
+          // Set the log flying to the left
+          spriteLog.setPosition({810, 720});
+          logSpeedX = -5000;
+          logActive = true;
+          acceptInput = false;
+        }
+      }
+
+      // Handle Left Arrow
+      if (Keyboard::isKeyPressed(Keyboard::Key::Left)) {
+        // Make sure the player is on the left
+        playerSide = side::Left;
+        score++;
+        // Add to the amount of time remaining
+        timeRemaining += (2 / score) + .15;
+        spriteAxe.setPosition({AXE_POSITION_LEFT, spriteAxe.getPosition().y});
+        spritePlayer.setPosition({580, 720});
+        // update the branches
+        updateBranches(score);
+        // set the log flying
+        spriteLog.setPosition({810, 720});
+        logSpeedX = 5000;
+        logActive = true;
+        acceptInput = false;
       }
 
       if (const auto* keyPressed = event->getIf<Event::KeyPressed>()) {
@@ -293,6 +354,10 @@ int main() {
       window.draw(*branches[i]);
     }
     window.draw(spriteTree);
+    window.draw(spritePlayer);
+    window.draw(spriteAxe);
+    window.draw(spriteLog);
+    window.draw(spriteRIP);
     window.draw(spriteBee);
     window.draw(scoreText);
     window.draw(timeBar);
