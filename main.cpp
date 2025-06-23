@@ -131,6 +131,52 @@ int main() {
     branches[i]->setOrigin({220, 20});
   }
 
+  // Prepare the player
+  Texture texturePlayer;
+  if (!texturePlayer.loadFromFile("../graphics/player.png")) {
+    std::cerr << "Failed to load player.png\n";
+    return 1;
+  }
+  Sprite spritePlayer(texturePlayer);
+  spritePlayer.setTexture(texturePlayer);
+  spritePlayer.setPosition({580, 720});
+  // The player starts on the left
+  side playerSide = side::Left;
+  // Prepare the gravestone
+  Texture textureRIP;
+  if (!textureRIP.loadFromFile("../graphics/rip.png")) {
+    std::cerr << "Failed to load rip.png\n";
+    return 1;
+  }
+  Sprite spriteRIP(textureRIP);
+  spriteRIP.setTexture(textureRIP);
+  spriteRIP.setPosition({600, 860});
+  // Prepare the axe
+  Texture textureAxe;
+  if (!textureAxe.loadFromFile("../graphics/axe.png")) {
+    std::cerr << "Failed to load axe.png\n";
+    return 1;
+  }
+  Sprite spriteAxe(textureAxe);
+  spriteAxe.setTexture(textureAxe);
+  spriteAxe.setPosition({700, 830});
+  // Line the axe up with the tree
+  const float AXE_POSITION_LEFT = 700;
+  const float AXE_POSITION_RIGHT = 1075;
+  // Prepare the flying log
+  Texture textureLog;
+  if (!textureLog.loadFromFile("../graphics/log.png")) {
+    std::cerr << "Failed to load log.png\n";
+    return 1;
+  }
+  Sprite spriteLog(textureLog);
+  spriteLog.setTexture(textureLog);
+  spriteLog.setPosition({810, 720});
+  // Some other useful log related variables
+  bool logActive = false;
+  float logSpeedX = 1000;
+  float logSpeedY = -1500;
+
   // Main game loop
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
